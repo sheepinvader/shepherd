@@ -1,9 +1,11 @@
 package com.shepherd;
 
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.PointF;
+import android.util.Log;
 
 public class ShepherdTarget extends StaticGameObject {
 	private GameView gameField;
@@ -14,9 +16,10 @@ public class ShepherdTarget extends StaticGameObject {
 	{
 		this.gameField = gameField;
 		this.visible = false;
-		this.bmp = BitmapFactory.decodeResource(gameField.getResources(), R.drawable.ic_launcher);
+		
+		Resources resources = gameField.getResources();
+		this.bmp = BitmapFactory.decodeResource(resources, R.drawable.ic_launcher);
 	}
-	
 	@Override
 	public void onDraw(Canvas c)
 	{

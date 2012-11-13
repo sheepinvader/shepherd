@@ -5,6 +5,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 //import android.graphics.Point;
 import android.graphics.PointF;
+import android.util.Log;
 
 public class Shepherd extends MovingGameObject {
 	private final float RAPIDITY = 0.5f; 
@@ -16,8 +17,10 @@ public class Shepherd extends MovingGameObject {
 	{
 		this.velocity.x = 0;
 		this.velocity.y = 0;
-		this.position.x = gameField.getWidth()/2 ; // central position
-		this.position.y = gameField.getHeight()/2 ;
+
+		this.position.x = gameField.getWidth() / 2 ; // central position
+		this.position.y = gameField.getHeight() / 2 ;
+	
 		this.gameField = gameField;
 		this.bmp = BitmapFactory.decodeResource(gameField.getResources(), R.drawable.ic_launcher);
 	}

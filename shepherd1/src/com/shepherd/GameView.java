@@ -10,20 +10,19 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.PointF;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
 public class GameView extends SurfaceView {
-	private GameThread mThread;
-	
-	private final long DELTA_T = 100l; // in milliseconds
+	private GameThread thread;
 	
 	private ShepherdTarget shepherdTarget;
 	private Shepherd shepherd;
 	
 	private ArrayList<Sheep> sheeps;
-	private ArrayList<Grass> grassPlots;
+	private ArrayList<Grass> grassUnits;
 	
 	private boolean running = false;
 	    
@@ -31,21 +30,17 @@ public class GameView extends SurfaceView {
 	    
 	    public class GameThread extends Thread
 	    {
-	    
 	        private GameView view;	 
 	        
-	    
 	        public GameThread(GameView view) 
 	        {
 	              this.view = view;
 	        }
-
 	    
-	        public void setRunning(boolean run) 
+	        public void setRunning(boolean _running) 
 	        {
-	              running = run;
+	              running = _running;
 	        }
-
 	    
 	        public void run()
 	        {
@@ -53,8 +48,7 @@ public class GameView extends SurfaceView {
 	            {
 	                Canvas canvas = null;
 	                try
-	                {
-	                    
+	                {                 
 	                    canvas = view.getHolder().lockCanvas();
 	                    synchronized (view.getHolder())
 	                    {
@@ -76,36 +70,29 @@ public class GameView extends SurfaceView {
 
 	//-------------End of GameThread--------------------------------------------------\\
 	    
-	    public GameView(Context context, int countSheep,int contGrass) 
+	    public GameView(Context context, int countSheep,int countGrassUnits) 
 	    {
 	        super(context);
-	        
 	        shepherdTarget = new ShepherdTarget(this);
-	        shepherd = new Shepherd(this);	        	        
+	        shepherd = new Shepherd(this);
+	        	        
 	        sheeps = new ArrayList<Sheep>();
-	        for(int i = 0; i!= countSheep;++i){
+	        for(int i = 0; i!= countSheep;++i)
 	        	sheeps.add(new Sheep(this));
-	        }
-	        
-	        
-	        mThread = new GameThread(this);
-	              
-	        
-	        
+
+	        thread = new GameThread(this);
 	        
 	        getHolder().addCallback(new SurfaceHolder.Callback() 
 	        {
-	      	  	 
 	               public void surfaceDestroyed(SurfaceHolder holder) 
 	               {
 	            	   boolean retry = true;
-	            	    mThread.setRunning(false);
+	            	    thread.setRunning(false);
 	            	    while (retry)
 	            	    {
 	            	        try
 	            	        {
-	            
-	            	            mThread.join();
+	            	            thread.join();
 	            	            retry = false;
 	            	        }
 	            	        catch (InterruptedException e) { }
@@ -115,8 +102,8 @@ public class GameView extends SurfaceView {
 	               
 	               public void surfaceCreated(SurfaceHolder holder) 
 	               {
-	            	   mThread.setRunning(true);
-	            	   mThread.start();
+	            	   thread.setRunning(true);
+	            	   thread.start();
 	               }
 
 	               
