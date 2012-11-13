@@ -22,7 +22,7 @@ public class GameView extends SurfaceView {
 	private Shepherd shepherd;
 	
 	private ArrayList<Sheep> sheeps;
-	private ArrayList<Grass> grassUnits;
+	//private ArrayList<Grass> grassUnits;
 	
 	private boolean running = false;
 	    
@@ -139,13 +139,23 @@ public class GameView extends SurfaceView {
 	    }
 	    protected void onDraw(Canvas canvas) {     	
 	          canvas.drawColor(Color.WHITE);
+	          
 	          //update and draw all objects
-	          shepherd.onDraw(canvas);
 	          shepherdTarget.onDraw(canvas);
+	          shepherd.onDraw(canvas);
+
 	          for(Sheep sheep: sheeps){
 		    		sheep.onDraw(canvas);
 		      }	          
 	    }
+
+		public MovingGameObject getShepherd() {
+			return shepherd;
+		}
+
+		public ArrayList<MovingGameObject> getSheeps() {
+			return (ArrayList<MovingGameObject>) sheeps.clone();
+		}
 	
 	
 }

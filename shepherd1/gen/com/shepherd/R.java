@@ -13,6 +13,12 @@ public final class R {
     public static final class drawable {
         public static final int ic_action_search=0x7f020000;
         public static final int ic_launcher=0x7f020001;
+        public static final int pic_gingerbread=0x7f020002;
+        public static final int pic_potato=0x7f020003;
+        public static final int pic_sheep=0x7f020004;
+        public static final int pic_shepherd=0x7f020005;
+        public static final int pic_sun=0x7f020006;
+        public static final int pic_target=0x7f020007;
     }
     public static final class id {
         public static final int buttonStartNewGame=0x7f070001;

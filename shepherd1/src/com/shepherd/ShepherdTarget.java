@@ -18,7 +18,7 @@ public class ShepherdTarget extends StaticGameObject {
 		this.visible = false;
 		
 		Resources resources = gameField.getResources();
-		this.bmp = BitmapFactory.decodeResource(resources, R.drawable.ic_launcher);
+		this.bmp = BitmapFactory.decodeResource(resources, R.drawable.pic_target);
 	}
 	@Override
 	public void onDraw(Canvas c)
