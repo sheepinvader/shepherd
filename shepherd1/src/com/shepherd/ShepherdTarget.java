@@ -5,7 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.PointF;
-import android.util.Log;
+ 
 
 public class ShepherdTarget extends StaticGameObject {
 	private GameView gameField;
@@ -24,7 +24,7 @@ public class ShepherdTarget extends StaticGameObject {
 	public void onDraw(Canvas c)
 	{
 		if(this.visible)
-			c.drawBitmap(bmp, this.position.x, this.position.y, null);
+			c.drawBitmap(bmp, this.position.x - bmp.getWidth()/2 , this.position.y - bmp.getHeight()/2 , null);
 	}
 	
 	public void show()

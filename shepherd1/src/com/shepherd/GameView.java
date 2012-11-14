@@ -10,7 +10,7 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.PointF;
-import android.util.Log;
+ 
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -23,6 +23,7 @@ public class GameView extends SurfaceView {
 	
 	private ArrayList<Sheep> sheeps;
 	//private ArrayList<Grass> grassUnits;
+	private boolean Init = true ;	
 	
 	private boolean running = false;
 	    
@@ -69,6 +70,16 @@ public class GameView extends SurfaceView {
 	    }
 
 	//-------------End of GameThread--------------------------------------------------\\
+	    
+	    public void initSprites()
+	    {
+	    	 this.shepherd.SetPosition(new PointF(getWidth()/2,getHeight()/2));	        	        
+	    	 PointF p = null;
+	    	 for(Sheep sheep: sheeps){
+	    		 	p = new PointF( (float) (Math.random() * this.getWidth()/2),(float)( Math.random() * this.getHeight()/2) ); 	 
+		    		sheep.SetPosition(p);
+		      }	  
+	    }
 	    
 	    public GameView(Context context, int countSheep,int countGrassUnits) 
 	    {
@@ -140,13 +151,19 @@ public class GameView extends SurfaceView {
 	    protected void onDraw(Canvas canvas) {     	
 	          canvas.drawColor(Color.WHITE);
 	          
+	          if( Init){
+	        	  initSprites();
+	        	  Init = false;	
+	          } 	
+	          
 	          //update and draw all objects
 	          shepherdTarget.onDraw(canvas);
-	          shepherd.onDraw(canvas);
-
 	          for(Sheep sheep: sheeps){
 		    		sheep.onDraw(canvas);
-		      }	          
+		      }	 
+	          shepherd.onDraw(canvas);
+
+	                   
 	    }
 
 		public MovingGameObject getShepherd() {

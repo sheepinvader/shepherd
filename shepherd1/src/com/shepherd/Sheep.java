@@ -8,6 +8,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 //import android.graphics.PointF;
+import android.graphics.PointF;
 
 public class Sheep extends MovingGameObject {
 	private final double Lx = 100;	/* размер ячейки вдоль оси x (в единицах sigma) */
@@ -20,10 +21,10 @@ public class Sheep extends MovingGameObject {
 	
 	public Sheep(GameView gameField)
 	{
-		this.position.x = (float)Math.random()*gameField.getWidth();
-		this.position.y = (float)Math.random()*gameField.getHeight();
+		this.position.x = 0 ;
+		this.position.y = 0 ;
 		this.gameField = gameField;
-		this.bmp = BitmapFactory.decodeResource(gameField.getResources(), R.drawable.pic_sun);
+		this.bmp = BitmapFactory.decodeResource(gameField.getResources(), R.drawable.pic_potato);
 	}
 	
 	@Override
@@ -102,9 +103,15 @@ public class Sheep extends MovingGameObject {
 		this.velocity.y = this.velocity.y + 0.5f * this.acceleration.y * dt ;
 	}
 	
+	public void SetPosition(PointF p)
+	{
+		this.position.x = p.x;
+		this.position.y = p.y;
+	}
+	
 	@Override
 	public void onDraw(Canvas c)
 	{
-		c.drawBitmap(bmp, this.position.x, this.position.y, null);
+		c.drawBitmap(bmp, this.position.x - bmp.getWidth()/2 , this.position.y - bmp.getHeight()/2 , null);
 	}
 }

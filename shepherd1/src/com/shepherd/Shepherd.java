@@ -8,8 +8,8 @@ import android.graphics.PointF;
 import android.util.Log;
 
 public class Shepherd extends MovingGameObject {
-	private final float RAPIDITY = 0.02f; 
-	
+	private final float RAPIDITY = 0.05f; 
+	private final float EPS = 20f;
 	private GameView gameField;
 	private Bitmap bmp;
 	
@@ -18,11 +18,11 @@ public class Shepherd extends MovingGameObject {
 		this.velocity.x = 0;
 		this.velocity.y = 0;
 
-		this.position.x = gameField.getWidth() / 2 ; // central position
-		this.position.y = gameField.getHeight() / 2 ;
+		this.position.x = 0; // central position
+		this.position.y = 0;
 	
 		this.gameField = gameField;
-		this.bmp = BitmapFactory.decodeResource(gameField.getResources(), R.drawable.pic_potato);
+		this.bmp = BitmapFactory.decodeResource(gameField.getResources(), R.drawable.pic_sun);
 	}
 	
 	@Override
@@ -31,9 +31,9 @@ public class Shepherd extends MovingGameObject {
 		this.position.y += this.velocity.y;
 		
 		PointF targetPosition = gameField.getShepherdTarget().getPosition();
-		float eps = 0.1f; 
-		if ((this.position.x - targetPosition.x) < eps
-				&& (this.position.y - targetPosition.y) < eps  )
+		 
+		if ((this.position.x - targetPosition.x) < EPS
+				&& (this.position.y - targetPosition.y) < EPS  )
 		{
 			gameField.getShepherdTarget().hide();
 		}
@@ -42,9 +42,15 @@ public class Shepherd extends MovingGameObject {
 		this.velocity.y = RAPIDITY * (targetPosition.y - this.position.y);
 	}
 	
+	public void SetPosition(PointF p)
+	{
+		this.position.x = p.x;
+		this.position.y = p.y;
+	}
+	
 	@Override
 	public void onDraw(Canvas c)
 	{
-		c.drawBitmap(bmp, this.position.x, this.position.y, null);
+		c.drawBitmap(bmp, this.position.x - bmp.getWidth()/2 , this.position.y - bmp.getHeight()/2 , null);
 	}
 }
