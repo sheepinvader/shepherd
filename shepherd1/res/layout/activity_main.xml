@@ -25,7 +25,7 @@
         android:background="#4fa9f8"
         android:text="@string/button_start_new_game"
         android:textColor="#ffffff"
-        android:fontFamily="Arial" />
+         />
 
     <Button
         android:id="@+id/buttonExit"
@@ -37,6 +37,6 @@
         android:background="#4fa9f8"
         android:text="@string/button_exit"
         android:textColor="#ffffff" 
-        android:fontFamily="Arial" />
+         />
 
 </RelativeLayout>

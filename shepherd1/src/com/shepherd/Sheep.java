@@ -22,8 +22,8 @@ public class Sheep extends MovingGameObject {
 	
 	public Sheep(GameView gameField)
 	{
-		this.position.x = (float)Math.random() * 240 + 120; //gameField.getWidth();
-		this.position.y = (float)Math.random() * 400 + 200; //gameField.getHeight();
+		this.position.x = (float)Math.random() * 180 + 90; //gameField.getWidth();
+		this.position.y = (float)Math.random() * 250 + 200; //gameField.getHeight();
 		this.gameField = gameField;
 		this.bmp = BitmapFactory.decodeResource(gameField.getResources(), R.drawable.pic_sheep_main);
 		this.bmpOffset = new PointF(bmp.getWidth() / 2, bmp.getHeight() / 2);
@@ -77,6 +77,10 @@ public class Sheep extends MovingGameObject {
           double a = Math.atan2(	this.getY() - shepherd.getY(),
                            			this.getX() - shepherd.getX());
           this.move(a, SHEEP_RUN);
+        }
+        if (getX() <= 0 || getX() >= 240 || getY() <= 0 || getY() >= 480)
+        {
+        	gameField.setFailed();
         }
 	}
 	

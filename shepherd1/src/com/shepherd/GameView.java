@@ -13,6 +13,7 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
 public class GameView extends SurfaceView {
+	
 	private GameThread thread;
 
 	private ShepherdTarget shepherdTarget;
@@ -21,7 +22,9 @@ public class GameView extends SurfaceView {
 	private boolean Init = true;
 	
 	private boolean running = false;
-	private boolean paused = false;
+	private boolean paused  = false;
+	private boolean failed  = false;
+	private double  scores  = 0;
 	    
 	//-------------Start of GameThread--------------------------------------------------\\
 	    
@@ -49,15 +52,27 @@ public class GameView extends SurfaceView {
 		                        onDraw(canvas);
 		                    }
 		                }
-		                catch (Exception e) { }
+		                catch (Exception e) { running = false; }
 		                finally
 		                {
 		                    if (canvas != null)
-		                    {
 		                    	view.getHolder().unlockCanvasAndPost(canvas);
-		                    }
 		                }
+		                if (failed)
+		                {
+		                	//TODO add failed dialog show
+		                	break;
+		                }
+		                scores = scores + 0.1;
+		                //TODO add scores out
 		            }
+	            	else
+	            	{
+	            		try
+	            		{
+	            			sleep(500);
+	            		}catch(InterruptedException e) {}
+	            	}
 	        }
 	    }
 
@@ -78,11 +93,16 @@ public class GameView extends SurfaceView {
         	paused = !paused;
         }
         
+        public void setFailed()
+        {
+        	failed = true;
+        }
+        
 	    public GameView(Context context, int countSheep) 
 	    {
 	        super(context);
 	        shepherdTarget = new ShepherdTarget(this);
-	        shepherd = new Shepherd(this);
+	        shepherd       = new Shepherd(this);
 	        	        
 	        sheeps = new ArrayList<Sheep>();
 	        for(int i = 0; i!= countSheep;++i)
@@ -94,31 +114,14 @@ public class GameView extends SurfaceView {
 	        {
 	               public void surfaceDestroyed(SurfaceHolder holder) 
 	               {
-	            	   boolean retry = true;
-	            	   running = false;
-	            	   
-	            	   while (retry)
-	            	   {
-	            	       try
-	            	       {
-	            	           thread.join(1500);
-	            	           retry = false;
-	            	       }
-	            	       catch (InterruptedException e) { }
-	            	   }
+	            	   KillThread();
 	               }
-
-	               
 	               public void surfaceCreated(SurfaceHolder holder) 
 	               {
-	            	   running = true;
-	            	   thread.start();
+            		   running = true;
+            		   thread.start();
 	               }
-
-	               
-	               public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) 
-	               {
-	               }
+				   public void surfaceChanged(SurfaceHolder arg0, int arg1, int arg2, int arg3) {}
 	        });
 	    }
 	    
@@ -129,15 +132,12 @@ public class GameView extends SurfaceView {
 	    		shepherdTarget.SetPosition(new PointF(e.getX(),e.getY()));
 	    		shepherdTarget.show();
 	    	}
-	    	
 	        return true;
 	    }
-	    
 	    public ShepherdTarget getShepherdTarget()
 	    {
 	    	return shepherdTarget;
 	    }
-	    
 	    public void update()
 	    {
 	    	shepherd.update();
@@ -146,13 +146,12 @@ public class GameView extends SurfaceView {
 	    	}
 	    }
 	    protected void onDraw(Canvas canvas) {     	
-	          canvas.drawColor(Color.rgb(0x6b, 0xe5, 0x06));
-	          
+	          canvas.drawColor(Color.rgb(0x6b, 0xe5, 0x06));	
+	          //TODO move init to sizechanged
 	          if(Init){
 	        	  initSprites();
 	        	  Init = false;
 	          }
-	          
 	          //update and draw all objects
 	          shepherdTarget.onDraw(canvas);
 	          for(Sheep sheep: sheeps){
@@ -169,5 +168,17 @@ public class GameView extends SurfaceView {
 			return (ArrayList<MovingGameObject>) sheeps.clone();
 		}
 	
-	
+		public void KillThread()
+		{
+			//TODO fix this function in next version
+     	   running = false;	            	   
+     	   while (thread.isAlive())
+     	   {
+     		   try
+     		   {
+     		      Thread.sleep(1000);
+     		   }
+     		   catch(InterruptedException e){}
+     	   }			
+		}
 }

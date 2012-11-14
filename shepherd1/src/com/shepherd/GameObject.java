@@ -9,8 +9,6 @@ public abstract class GameObject implements IViewable, ICartesian2D {
 	
 	@Override
 	public void onDraw(Canvas c) {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
