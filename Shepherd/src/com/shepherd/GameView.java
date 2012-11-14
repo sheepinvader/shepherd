@@ -1,7 +1,10 @@
 package com.shepherd;
 
 import android.content.Context;
+<<<<<<< HEAD
 import android.graphics.Canvas;
+=======
+>>>>>>> 046c3b627b55ce5c9c4a76438b8e8eebfb5f2c43
 import android.view.SurfaceView;
 
 public class GameView extends SurfaceView {
@@ -14,6 +17,7 @@ public class GameView extends SurfaceView {
 		// TODO Auto-generated constructor stub
 	}
 	
+<<<<<<< HEAD
 	public class GameThread extends Thread {
 		private GameView view;
 		
@@ -36,4 +40,7 @@ public class GameView extends SurfaceView {
 			}
 		}
 	}
+=======
+	
+>>>>>>> 046c3b627b55ce5c9c4a76438b8e8eebfb5f2c43
 }
