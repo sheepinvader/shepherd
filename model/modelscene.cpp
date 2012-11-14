@@ -127,7 +127,7 @@ void ModelScene::nextStep()
     {
         // расчитываем расстояния до пастуха и центра масс
         qreal dist_to_shepherd    = distance<Sheep, Shepherd>(m_Sheeps[i], m_Shepherd);
-        qreal dist_sheperd_center = distance<Sheep, QPointF>(m_Sheeps[i], sheeps_center);
+        qreal dist_sheperd_center = distance<Shepherd, QPointF>(m_Shepherd, sheeps_center);
         qreal dist_to_center      = distance<Sheep, QPointF>(m_Sheeps[i], sheeps_center);
 
         qreal dist_sheperd_1      = 20.0;
