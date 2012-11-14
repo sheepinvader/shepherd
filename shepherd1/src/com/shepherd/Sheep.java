@@ -1,106 +1,89 @@
 package com.shepherd;
 
- 
 
 import java.util.ArrayList;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-//import android.graphics.PointF;
 import android.graphics.PointF;
+//import android.graphics.PointF;
 
 public class Sheep extends MovingGameObject {
-	private final double Lx = 100;	/* размер ячейки вдоль оси x (в единицах sigma) */
-	private final double Ly = 100;	/* размер ячейки вдоль оси y (в единицах sigma) */
-	private final float Vmax = 1.4f;
-	private final float dt = 0.2f;
+	//private final float dt = 0.2f;
+    private final double SHEEP_RUN     = 3.0;
+    private final double SHEEP_BEE     = 1.0;
+    
+	private double lastRndAngle = 0;
 	
 	private GameView gameField;
 	private Bitmap bmp;
+	private PointF bmpOffset;
 	
 	public Sheep(GameView gameField)
 	{
-		this.position.x = 0 ;
-		this.position.y = 0 ;
+		this.position.x = (float)Math.random() * 240 + 120; //gameField.getWidth();
+		this.position.y = (float)Math.random() * 400 + 200; //gameField.getHeight();
 		this.gameField = gameField;
-		this.bmp = BitmapFactory.decodeResource(gameField.getResources(), R.drawable.pic_potato);
+		this.bmp = BitmapFactory.decodeResource(gameField.getResources(), R.drawable.pic_sheep_main);
+		this.bmpOffset = new PointF(bmp.getWidth() / 2, bmp.getHeight() / 2);
 	}
 	
 	@Override
 	public void update() 
 	{
-		/* находим новые координаты */
-		this.position.x += (this.velocity.x + 0.5 * this.acceleration.x * dt) * dt;
-		this.position.y += (this.velocity.y + 0.5 * this.acceleration.y * dt) * dt;
-		
-		/* находим новые скорости (часть 1) */
-		if (this.acceleration.x * this.acceleration.x + this.acceleration.y * this.acceleration.y > 1)
-		{
-			  this.acceleration.x = 0.5f * this.acceleration.x;
-		      this.acceleration.y = 0.5f * this.acceleration.y;
-		}
-		
-		if (this.velocity.x * this.velocity.x + this.velocity.y * this.velocity.y > 1)
-		{
-			  this.velocity.x = 0.02f * this.velocity.x;
-			  this.velocity.y = 0.02f * this.velocity.y;
-		}
-		
-		this.velocity.x = 1.0f * this.velocity.x + 0.5f * this.acceleration.x * dt;
-		this.velocity.y = 1.0f * this.velocity.y + 0.5f * this.acceleration.y * dt;
-		
-		/* находим новые ускорения и вычисляем новый потенциал */
-		this.acceleration.x = 0;
-		this.acceleration.y = 0;
-
+	    // рассчитываем центр масс овечек
+	    double sum_x = 0.0;
+	    double sum_y = 0.0;
+	    
+	    ArrayList<MovingGameObject> sheeps = gameField.getSheeps();
+	    for (MovingGameObject sheep: sheeps)
+	    {
+	      sum_x += sheep.getX();
+	      sum_y += sheep.getY();
+	    }
+	    
+	    PointF sheeps_center = new PointF(	(float)sum_x / sheeps.size(),
+	                         				(float)sum_y / sheeps.size());
+	    
+        // рассчитываем расстояния до пастуха и центра масс
 	    MovingGameObject shepherd = gameField.getShepherd();
-        float dx = shepherd.position.x - this.position.x;
-        float dy = shepherd.position.y - this.position.y;
-        float r2 = dx * dx + dy * dy;
-        if (r2 < 0.5f)
-        		r2 = 0.5f;
-        
-        float fsh = 0.0f;
-        if (r2 < 1600f)
-        	fsh = - 500.0f / r2;
 
-        this.acceleration.x = fsh * dt;
-        this.acceleration.y = fsh * dt;
+    	double dist_to_shepherd = Utilities.getDistance(this, shepherd);
+    	double dist_shepherd_center = Utilities.getDistance(shepherd, sheeps_center);
+    	double dist_to_center = Utilities.getDistance(this, sheeps_center);
 
-		ArrayList<MovingGameObject> sheeps = gameField.getSheeps();
-		float c = - this.velocity.x / this.velocity.y;
-		float b = - c * (this.position.x + this.position.y);       
-		float condition1 = this.position.y + this.velocity.y - c * (this.velocity.x - this.position.y);
-		
-		float f;            
-        for (MovingGameObject sheep: sheeps) {
-        //for(j = i + 1; j < count ; j++)
-            if (condition1 > 0 && sheep.position.y > c * sheep.position.x + b
-            	|| condition1 < 0 && sheep.position.y < c * sheep.position.x + b)
-            {
-                 dx = this.position.x - sheep.position.x;
-                 dy = this.position.y - sheep.position.y;
+    	double dist_shepherd_1 = 50.0;
+    	double dist_shepherd_2 = 50.0;
+    	double dist_sheep_center_1 = 10.0;
 
-                 r2 = dx * dx + dy * dy;
-
-                 if (r2 < 0.05f)
-                	 r2 = 0.05f;
-                 float r2i  = 1.0f / r2;
-                 f = 0.1f * r2i * (-25.0f * r2i + 1.0f);
-
-                  this.acceleration.x += f * dx;
-                  this.acceleration.y += f * dy;
-
-                 /* используем третий закон Ньютона */
-                 sheep.acceleration.x += - this.acceleration.x;
-                 sheep.acceleration.y += - this.acceleration.y;
-            }
+        if (dist_to_shepherd > dist_shepherd_1)
+        {
+        	this.randomMove(SHEEP_BEE);
         }
-
-		/* находим новые скорости (часть 2) */
-		this.velocity.x = this.velocity.x + 0.5f * this.acceleration.x * dt ;
-		this.velocity.y = this.velocity.y + 0.5f * this.acceleration.y * dt ;
+        else if (dist_shepherd_center > dist_shepherd_2)
+        {
+          if (dist_to_center < dist_sheep_center_1)
+            this.randomMove(SHEEP_BEE);
+          else
+          {
+            double a = Math.atan2(	sum_y / sheeps.size() - this.getY(),
+                             		sum_x / sheeps.size() - this.getX());
+            this.move(a, SHEEP_RUN);
+          }
+        }
+        else
+        {
+          double a = Math.atan2(	this.getY() - shepherd.getY(),
+                           			this.getX() - shepherd.getX());
+          this.move(a, SHEEP_RUN);
+        }
+	}
+	
+	@Override
+	public void onDraw(Canvas c)
+	{
+		c.drawBitmap(bmp, this.position.x - this.bmpOffset.x, this.position.y - this.bmpOffset.y, null);
 	}
 	
 	public void SetPosition(PointF p)
@@ -109,9 +92,16 @@ public class Sheep extends MovingGameObject {
 		this.position.y = p.y;
 	}
 	
-	@Override
-	public void onDraw(Canvas c)
+	private void randomMove(double len)
 	{
-		c.drawBitmap(bmp, this.position.x - bmp.getWidth()/2 , this.position.y - bmp.getHeight()/2 , null);
+        double angle = Math.random() * Math.PI / 4.0 - Math.PI / 8.0;
+        this.move(lastRndAngle + angle, len);
+        lastRndAngle = lastRndAngle + angle;	
+	}
+	
+	private void move(double angle, double len)
+	{
+        this.position.x += Math.cos(angle) * len;
+        this.position.y += Math.sin(angle) * len;
 	}
 }

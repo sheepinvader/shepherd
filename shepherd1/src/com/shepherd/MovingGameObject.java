@@ -4,8 +4,7 @@ import android.graphics.Canvas;
 import android.graphics.Point;
 import android.graphics.PointF;
 
-public abstract class MovingGameObject implements IViewable, IMoveable {
-	PointF position = new PointF();
+public abstract class MovingGameObject extends GameObject implements IMoveable {
 	PointF velocity = new PointF();
 	PointF acceleration = new PointF();
 	
@@ -20,5 +19,4 @@ public abstract class MovingGameObject implements IViewable, IMoveable {
 		// TODO Auto-generated method stub
 
 	}
-
 }

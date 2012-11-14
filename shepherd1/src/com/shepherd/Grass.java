@@ -1,5 +1,5 @@
 package com.shepherd;
 
-public class Grass extends StaticGameObject {
+public class Grass extends GameObject {
 
 }

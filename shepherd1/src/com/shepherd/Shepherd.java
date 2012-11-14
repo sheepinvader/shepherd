@@ -3,43 +3,44 @@ package com.shepherd;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-//import android.graphics.Point;
 import android.graphics.PointF;
-import android.util.Log;
+
 
 public class Shepherd extends MovingGameObject {
-	private final float RAPIDITY = 0.05f; 
-	private final float EPS = 20f;
+    private final double SHEPHERD_MOVE = 4.5;
+    private final double SHEPHERD_TARGET_EPS = 2.5;
+	
 	private GameView gameField;
 	private Bitmap bmp;
+	private PointF bmpOffset;
 	
 	public Shepherd(GameView gameField)
 	{
 		this.velocity.x = 0;
 		this.velocity.y = 0;
 
-		this.position.x = 0; // central position
-		this.position.y = 0;
+		this.position.x = 240; //gameField.getWidth() / 2 ; // central position
+		this.position.y = 400; //gameField.getHeight() / 2 ;
 	
 		this.gameField = gameField;
-		this.bmp = BitmapFactory.decodeResource(gameField.getResources(), R.drawable.pic_sun);
+		this.bmp = BitmapFactory.decodeResource(gameField.getResources(), R.drawable.pic_shepherd_main);
+		this.bmpOffset = new PointF(bmp.getWidth() / 2, bmp.getHeight() / 2);
 	}
 	
 	@Override
 	public void update() {
-		this.position.x += this.velocity.x;
-		this.position.y += this.velocity.y;
-		
-		PointF targetPosition = gameField.getShepherdTarget().getPosition();
-		 
-		if ((this.position.x - targetPosition.x) < EPS
-				&& (this.position.y - targetPosition.y) < EPS  )
+		ShepherdTarget target = gameField.getShepherdTarget();
+		if (target.isVisible())
 		{
-			gameField.getShepherdTarget().hide();
-		}
+	        double angle = Utilities.getAngle(this, target);
 
-		this.velocity.x = RAPIDITY * (targetPosition.x - this.position.x);
-		this.velocity.y = RAPIDITY * (targetPosition.y - this.position.y);
+			this.position.x += Math.cos(angle) * SHEPHERD_MOVE;
+			this.position.y += Math.sin(angle) * SHEPHERD_MOVE;
+			
+	        double distance = Utilities.getDistance(this, target);
+	        if (distance < SHEPHERD_TARGET_EPS)
+	          target.hide();
+		}
 	}
 	
 	public void SetPosition(PointF p)
@@ -51,6 +52,6 @@ public class Shepherd extends MovingGameObject {
 	@Override
 	public void onDraw(Canvas c)
 	{
-		c.drawBitmap(bmp, this.position.x - bmp.getWidth()/2 , this.position.y - bmp.getHeight()/2 , null);
+		c.drawBitmap(bmp, this.position.x - this.bmpOffset.x, this.position.y - this.bmpOffset.y, null);
 	}
 }

@@ -5,27 +5,23 @@ import java.util.ArrayList;
 
 
 import android.content.Context;
-//import android.graphics.Bitmap;
-//import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.PointF;
- 
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
 public class GameView extends SurfaceView {
 	private GameThread thread;
-	
+
 	private ShepherdTarget shepherdTarget;
 	private Shepherd shepherd;
-	
 	private ArrayList<Sheep> sheeps;
-	//private ArrayList<Grass> grassUnits;
-	private boolean Init = true ;	
+	private boolean Init = true;
 	
 	private boolean running = false;
+	private boolean paused = false;
 	    
 	//-------------Start of GameThread--------------------------------------------------\\
 	    
@@ -38,34 +34,30 @@ public class GameView extends SurfaceView {
 	              this.view = view;
 	        }
 	    
-	        public void setRunning(boolean _running) 
-	        {
-	              running = _running;
-	        }
-	    
 	        public void run()
 	        {
 	            while (running)
-	            {
-	                Canvas canvas = null;
-	                try
-	                {                 
-	                    canvas = view.getHolder().lockCanvas();
-	                    synchronized (view.getHolder())
-	                    {
-	                        update();
-	                        onDraw(canvas);
-	                    }
-	                }
-	                catch (Exception e) { }
-	                finally
-	                {
-	                    if (canvas != null)
-	                    {
-	                    	view.getHolder().unlockCanvasAndPost(canvas);
-	                    }
-	                }
-	            }
+	            	if (!paused)
+		            {
+		                Canvas canvas = null;
+		                try
+		                {                 
+		                    canvas = view.getHolder().lockCanvas();
+		                    synchronized (view.getHolder())
+		                    {
+		                        update();
+		                        onDraw(canvas);
+		                    }
+		                }
+		                catch (Exception e) { }
+		                finally
+		                {
+		                    if (canvas != null)
+		                    {
+		                    	view.getHolder().unlockCanvasAndPost(canvas);
+		                    }
+		                }
+		            }
 	        }
 	    }
 
@@ -73,15 +65,20 @@ public class GameView extends SurfaceView {
 	    
 	    public void initSprites()
 	    {
-	    	 this.shepherd.SetPosition(new PointF(getWidth()/2,getHeight()/2));	        	        
-	    	 PointF p = null;
-	    	 for(Sheep sheep: sheeps){
-	    		 	p = new PointF( (float) (Math.random() * this.getWidth()/2),(float)( Math.random() * this.getHeight()/2) ); 	 
-		    		sheep.SetPosition(p);
-		      }	  
+	    	this.shepherd.SetPosition(new PointF(getWidth()/2,getHeight()/2));
+	    	PointF p = null;
+	    	for(Sheep sheep: sheeps){
+	    		p = new PointF((float) (Math.random() * this.getWidth()),(float)(Math.random() * this.getHeight()));
+	    		sheep.SetPosition(p);
+	    	}
 	    }
 	    
-	    public GameView(Context context, int countSheep,int countGrassUnits) 
+        public void togglePaused() 
+        {
+        	paused = !paused;
+        }
+        
+	    public GameView(Context context, int countSheep) 
 	    {
 	        super(context);
 	        shepherdTarget = new ShepherdTarget(this);
@@ -98,22 +95,23 @@ public class GameView extends SurfaceView {
 	               public void surfaceDestroyed(SurfaceHolder holder) 
 	               {
 	            	   boolean retry = true;
-	            	    thread.setRunning(false);
-	            	    while (retry)
-	            	    {
-	            	        try
-	            	        {
-	            	            thread.join();
-	            	            retry = false;
-	            	        }
-	            	        catch (InterruptedException e) { }
-	            	    }
+	            	   running = false;
+	            	   
+	            	   while (retry)
+	            	   {
+	            	       try
+	            	       {
+	            	           thread.join(1500);
+	            	           retry = false;
+	            	       }
+	            	       catch (InterruptedException e) { }
+	            	   }
 	               }
 
 	               
 	               public void surfaceCreated(SurfaceHolder holder) 
 	               {
-	            	   thread.setRunning(true);
+	            	   running = true;
 	            	   thread.start();
 	               }
 
@@ -127,8 +125,7 @@ public class GameView extends SurfaceView {
 	    
 	    public boolean onTouchEvent(MotionEvent e) 
 	    {
-	    	
-	    	if(e.getAction() == MotionEvent.ACTION_DOWN){
+	    	if(e.getAction() == MotionEvent.ACTION_DOWN && !paused){
 	    		shepherdTarget.SetPosition(new PointF(e.getX(),e.getY()));
 	    		shepherdTarget.show();
 	    	}
@@ -149,21 +146,19 @@ public class GameView extends SurfaceView {
 	    	}
 	    }
 	    protected void onDraw(Canvas canvas) {     	
-	          canvas.drawColor(Color.WHITE);
+	          canvas.drawColor(Color.rgb(0x6b, 0xe5, 0x06));
 	          
-	          if( Init){
+	          if(Init){
 	        	  initSprites();
-	        	  Init = false;	
-	          } 	
+	        	  Init = false;
+	          }
 	          
 	          //update and draw all objects
 	          shepherdTarget.onDraw(canvas);
 	          for(Sheep sheep: sheeps){
 		    		sheep.onDraw(canvas);
-		      }	 
+		      }		          
 	          shepherd.onDraw(canvas);
-
-	                   
 	    }
 
 		public MovingGameObject getShepherd() {
