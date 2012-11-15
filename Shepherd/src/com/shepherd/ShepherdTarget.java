@@ -16,15 +16,15 @@ public class ShepherdTarget extends GameObject implements IHideable {
 		this.gameField = gameField;
 		this.visible = true;
 		
-		this.position.x = 240; //gameField.getWidth() / 2 ; // central position
-		this.position.y = 400; //gameField.getHeight() / 2 ;
+		//this.position.x = 240; //gameField.getWidth() / 2 ; // central position
+		//this.position.y = 400; //gameField.getHeight() / 2 ;
 		
 		Resources resources = gameField.getResources();
-		this.bmp = BitmapFactory.decodeResource(resources, R.drawable.pic_target);
+		this.bmp = BitmapFactory.decodeResource(resources, R.drawable.pic_target_transparent);
 		this.bmpOffset = new PointF(bmp.getWidth() / 2, bmp.getHeight() / 2);
 	}
 	@Override
-	public void onDraw(Canvas c)
+	public void draw(Canvas c)
 	{
 		if(this.visible)
 			c.drawBitmap(bmp, this.position.x - this.bmpOffset.x, this.position.y - this.bmpOffset.y, null);

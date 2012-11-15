@@ -1,6 +1,7 @@
 package com.shepherd;
 
 import android.graphics.Canvas;
+import android.graphics.Point;
 import android.graphics.PointF;
 
 public abstract class MovingGameObject extends GameObject implements IMoveable {
@@ -11,5 +12,5 @@ public abstract class MovingGameObject extends GameObject implements IMoveable {
 	public void update() {}
 
 	@Override
-	public void onDraw(Canvas c) {}
+	public void draw(Canvas c) {}
 }

@@ -8,8 +8,7 @@ public abstract class GameObject implements IViewable, ICartesian2D {
 	protected PointF position = new PointF();
 	
 	@Override
-	public void onDraw(Canvas c) {
-	}
+	public void draw(Canvas c) {}
 
 	@Override
 	public double getX()

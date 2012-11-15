@@ -19,9 +19,6 @@ public class Shepherd extends MovingGameObject {
 		this.velocity.x = 0;
 		this.velocity.y = 0;
 
-		this.position.x = 240; //gameField.getWidth() / 2 ; // central position
-		this.position.y = 400; //gameField.getHeight() / 2 ;
-	
 		this.gameField = gameField;
 		this.bmp = BitmapFactory.decodeResource(gameField.getResources(), R.drawable.pic_shepherd_main);
 		this.bmpOffset = new PointF(bmp.getWidth() / 2, bmp.getHeight() / 2);
@@ -50,7 +47,7 @@ public class Shepherd extends MovingGameObject {
 	}
 	
 	@Override
-	public void onDraw(Canvas c)
+	public void draw(Canvas c)
 	{
 		c.drawBitmap(bmp, this.position.x - this.bmpOffset.x, this.position.y - this.bmpOffset.y, null);
 	}
