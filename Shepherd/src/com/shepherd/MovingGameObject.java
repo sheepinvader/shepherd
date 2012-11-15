@@ -1,23 +1,15 @@
 package com.shepherd;
 
-import android.graphics.Point;
+import android.graphics.Canvas;
 import android.graphics.PointF;
 
-public abstract class MovingGameObject implements IViewable, IMoveable {
-	PointF position;
-	PointF velocity;
-	PointF acceleration;
+public abstract class MovingGameObject extends GameObject implements IMoveable {
+	PointF velocity = new PointF();
+	PointF acceleration = new PointF();
 	
 	@Override
-	public void update() {
-		// TODO Auto-generated method stub
-
-	}
+	public void update() {}
 
 	@Override
-	public void draw() {
-		// TODO Auto-generated method stub
-
-	}
-
+	public void onDraw(Canvas c) {}
 }

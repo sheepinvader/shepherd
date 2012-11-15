@@ -2,15 +2,41 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_gravity="center" >
+    android:layout_gravity="center"
+    android:background="#6be506" >
+
+    <ImageView
+        android:id="@+id/imageMenuSheep"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="88dp"
+        android:contentDescription="@string/image_main_sheep_desc"
+        android:src="@drawable/pic_sheep" />
 
     <Button
         android:id="@+id/buttonStartNewGame"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="39dp"
-        android:text="@string/start_new_game_button" />
+        android:layout_marginTop="49dp"
+        android:background="#4fa9f8"
+        android:text="@string/button_start_new_game"
+        android:textColor="#ffffff"
+         />
+
+    <Button
+        android:id="@+id/buttonExit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/buttonStartNewGame"
+        android:layout_marginTop="16dp"
+        android:background="#4fa9f8"
+        android:text="@string/button_exit"
+        android:textColor="#ffffff" 
+         />
 
 </RelativeLayout>
